@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Serene Sleep | Ambient Sounds with Black Screen Mode</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="stars"></div>
+
+<div class="video-backdrop" id="videoBackdrop">
+    <video id="rainVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2022/07/04/124720-725621919_large.mp4" type="video/mp4">
+    </video>
+    <video id="fireVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2016/06/03/4017-172856720_large.mp4" type="video/mp4">
+    </video>
+    <video id="oceanVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2022/02/20/107020-680009904_large.mp4" type="video/mp4">
+    </video>
+    <video id="forestVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2021/12/05/102994-650049756_large.mp4" type="video/mp4">
+    </video>
+    <video id="whiteVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2023/05/20/164078-825752280_large.mp4" type="video/mp4">
+    </video>
+</div>
+
+<div class="container">
+    <header>
+        <h1>🌙 Serene Sleep</h1>
+        <p>rain · candle · ocean · forest · white noise</p>
+    </header>
+
+    <div class="sounds-grid" id="soundsGrid"></div>
+
+    <div class="footer-controls">
+        <div class="timer-section">
+            <label>⏱️ Sleep timer (min)</label>
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="number" id="timerMinutes" min="0" max="180" value="0" step="5" style="width: 80px;">
+                <button id="setTimerBtn">Set</button>
+            </div>
+            <div id="timerDisplay" class="timer-display"></div>
+        </div>
+        <div class="global-volume">
+            <label>🔊 Master volume</label>
+            <input type="range" id="masterVolume" min="0" max="1" step="0.01" value="0.6">
+        </div>
+        <button id="stopAllBtn" class="stop-all">■ Stop all sounds</button>
+        <button id="blackoutBtn" class="blackout-btn">🌙 Black screen mode</button>
+    </div>
+    <footer>Let the sounds guide you to peaceful rest. ♡</footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
