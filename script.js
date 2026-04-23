@@ -1,167 +1,94 @@
-// Audio elements for natural sounds
+// ---------- AUDIO SETUP ----------
 const sounds = {
-    rain: new Audio(),
-    fire: new Audio(),
-    ocean: new Audio(),
-    forest: new Audio()
+    rain: new Audio('https://cdn.pixabay.com/download/audio/2022/03/10/audio_8b6d5e6d1c.mp3?filename=rain-soft-01.mp3'),
+    fire: new Audio('https://cdn.pixabay.com/download/audio/2022/05/27/audio_2a2b3c4d.mp3?filename=fireplace-crackling-01.mp3'),
+    ocean: new Audio('https://cdn.pixabay.com/download/audio/2022/01/18/audio_9f9e8d7c.mp3?filename=ocean-waves-01.mp3'),
+    forest: new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_4d5e6f7a.mp3?filename=forest-birds-01.mp3'),
+    thunder: new Audio('https://cdn.pixabay.com/download/audio/2022/04/04/audio_1b1c2d3e.mp3?filename=thunder-rain-01.mp3'),
+    campfire: new Audio('https://cdn.pixabay.com/download/audio/2022/11/22/audio_5f5e5d5c.mp3?filename=campfire-crackling-01.mp3'),
+    waterfall: new Audio('https://cdn.pixabay.com/download/audio/2022/08/15/audio_3a3b3c3d.mp3?filename=waterfall-01.mp3')
 };
 
-// White noise using Web Audio API
-let whiteNoisePlaying = false;
-let audioCtx = null;
-let whiteNodeObj = null;
-let whiteGain = null;
-
-// Sound URLs (working free CDN samples from Pixabay – replace with your own if needed)
-sounds.rain.src = 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_8b6d5e6d1c.mp3?filename=rain-soft-01.mp3';
-sounds.fire.src = 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_2a2b3c4d.mp3?filename=fireplace-crackling-01.mp3';
-sounds.ocean.src = 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_9f9e8d7c.mp3?filename=ocean-waves-01.mp3';
-sounds.forest.src = 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_4d5e6f7a.mp3?filename=forest-birds-01.mp3';
-
-// Loop all natural sounds
+// Loop all sounds
 for (let key in sounds) {
     sounds[key].loop = true;
     sounds[key].volume = 0.5;
 }
 
-// Video elements
+// White noise (Web Audio) as extra? But we already have 7 sounds, enough.
+
+// Video elements mapping
 const videos = {
     rain: document.getElementById('rainVideo'),
     fire: document.getElementById('fireVideo'),
     ocean: document.getElementById('oceanVideo'),
     forest: document.getElementById('forestVideo'),
-    whitenoise: document.getElementById('whiteVideo')
+    thunder: document.getElementById('thunderVideo'),
+    campfire: document.getElementById('campfireVideo'),
+    waterfall: document.getElementById('waterfallVideo')
 };
 
-// Preload videos
+// Preload videos & ensure they can play muted
 for (let v of Object.values(videos)) {
     if (v) v.load();
 }
 
-// ---------- White Noise Generator ----------
-function initWhiteNoise() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        whiteGain = audioCtx.createGain();
-        whiteGain.gain.value = 0.5;
-        whiteGain.connect(audioCtx.destination);
-    }
-    const bufferSize = 4096;
-    const whiteNode = audioCtx.createScriptProcessor(bufferSize, 1, 1);
-    whiteNode.onaudioprocess = (e) => {
-        const output = e.outputBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            output[i] = Math.random() * 2 - 1;
-        }
-    };
-    whiteNode.connect(whiteGain);
-    return whiteNode;
-}
-
-function playWhiteNoise() {
-    if (!audioCtx) {
-        whiteNodeObj = initWhiteNoise();
-        audioCtx.resume();
-    } else if (whiteNodeObj === null) {
-        whiteNodeObj = initWhiteNoise();
-    }
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    whiteNoisePlaying = true;
-}
-
-function stopWhiteNoise() {
-    if (whiteNodeObj) {
-        whiteNodeObj.disconnect();
-        whiteNodeObj = null;
-    }
-    whiteNoisePlaying = false;
-}
-
-function setWhiteNoiseVolume(vol) {
-    if (whiteGain) whiteGain.gain.value = vol;
-}
-
-// Fake audio object for white noise to unify control
-const fakeWhiteAudio = {
-    play: () => playWhiteNoise(),
-    pause: () => stopWhiteNoise(),
-    setVolume: (v) => setWhiteNoiseVolume(v),
-    _volume: 0.5
-};
-
-// ---------- App State ----------
-let activeSound = null;   // either an Audio object or fakeWhiteAudio
-let activeType = null;    // 'rain', 'fire', 'ocean', 'forest', 'whitenoise'
+// ---------- STATE ----------
+let activeSound = null;     // Audio object currently playing
+let activeType = null;      // e.g., 'rain'
 let timerInterval = null;
 
 // Master volume
 const masterSlider = document.getElementById('masterVolume');
-let masterVolume = 0.6;
+let masterVolume = 0.55;
 masterSlider.addEventListener('input', (e) => {
     masterVolume = parseFloat(e.target.value);
-    if (activeSound && activeSound !== fakeWhiteAudio) {
-        activeSound.volume = masterVolume;
-    } else if (activeType === 'whitenoise') {
-        setWhiteNoiseVolume(masterVolume);
-    }
+    if (activeSound) activeSound.volume = masterVolume;
 });
 
-function updateMasterVolume() {
-    if (activeSound && activeSound !== fakeWhiteAudio) activeSound.volume = masterVolume;
-    else if (activeType === 'whitenoise') setWhiteNoiseVolume(masterVolume);
-}
-
-// Play a sound type
+// Play a specific sound + activate its video background
 function playSound(type) {
-    // Stop current sound
+    // Stop current
     stopAllSounds();
 
-    if (type === 'whitenoise') {
-        fakeWhiteAudio.play();
-        activeSound = fakeWhiteAudio;
-        activeType = 'whitenoise';
-        setWhiteNoiseVolume(masterVolume);
-    } else {
-        const audio = sounds[type];
-        audio.volume = masterVolume;
-        audio.play().catch(e => console.log("Autoplay blocked? Click page first", e));
-        activeSound = audio;
-        activeType = type;
-    }
+    const audio = sounds[type];
+    audio.volume = masterVolume;
+    audio.play().catch(e => console.log("Autoplay blocked – click anywhere first", e));
+    activeSound = audio;
+    activeType = type;
 
     // Update UI indicators
     document.querySelectorAll('.sound-card').forEach(card => {
         const indicator = card.querySelector('.playing-indicator');
-        if (card.dataset.sound === type || (type === 'whitenoise' && card.dataset.sound === 'whitenoise')) {
+        if (card.dataset.sound === type) {
             indicator.textContent = '🔊 Playing...';
         } else {
             indicator.textContent = '';
         }
     });
 
-    // Switch background video
+    // Switch background video: deactivate all, activate current
     for (let vid of Object.values(videos)) {
         if (vid) vid.classList.remove('active');
     }
-    const videoKey = type === 'whitenoise' ? 'whitenoise' : type;
-    if (videos[videoKey]) {
-        videos[videoKey].classList.add('active');
-        videos[videoKey].play().catch(e => console.log);
+    if (videos[type]) {
+        videos[type].classList.add('active');
+        videos[type].play().catch(e => console.log("Video play error", e));
     }
 }
 
-// Stop all sounds and clear timer
+// Stop everything (audio + videos + timer)
 function stopAllSounds() {
-    if (activeSound && activeSound !== fakeWhiteAudio) {
+    if (activeSound) {
         activeSound.pause();
         activeSound.currentTime = 0;
     }
-    if (activeType === 'whitenoise') {
-        stopWhiteNoise();
-    }
     activeSound = null;
     activeType = null;
+
+    // Clear indicators
     document.querySelectorAll('.playing-indicator').forEach(el => el.textContent = '');
+    // Deactivate all videos
     for (let vid of Object.values(videos)) {
         if (vid) vid.classList.remove('active');
     }
@@ -179,9 +106,9 @@ function setTimer(minutes) {
         document.getElementById('timerDisplay').textContent = '';
         return;
     }
-    const end = Date.now() + minutes * 60 * 1000;
+    const endTime = Date.now() + minutes * 60 * 1000;
     const updateDisplay = () => {
-        const remaining = Math.max(0, end - Date.now());
+        const remaining = Math.max(0, endTime - Date.now());
         const mins = Math.floor(remaining / 60000);
         const secs = Math.floor((remaining % 60000) / 1000);
         document.getElementById('timerDisplay').textContent = `${mins}:${secs.toString().padStart(2,'0')}`;
@@ -195,7 +122,7 @@ function setTimer(minutes) {
     timerInterval = setInterval(updateDisplay, 1000);
 }
 
-// Event listeners
+// Event listeners for buttons
 document.getElementById('setTimerBtn').addEventListener('click', () => {
     const mins = parseInt(document.getElementById('timerMinutes').value, 10);
     setTimer(mins);
@@ -206,16 +133,18 @@ document.getElementById('stopAllBtn').addEventListener('click', stopAllSounds);
 const blackoutBtn = document.getElementById('blackoutBtn');
 blackoutBtn.addEventListener('click', () => {
     document.body.classList.toggle('blackout-mode');
-    blackoutBtn.textContent = document.body.classList.contains('blackout-mode') ? '☀️ Wake up' : '🌙 Black screen mode';
+    blackoutBtn.textContent = document.body.classList.contains('blackout-mode') ? '☀️ Wake up' : '🌙 Black screen';
 });
 
-// Dynamically create sound cards
+// ---------- DYNAMIC CARD CREATION ----------
 const soundList = [
-    { id: 'rain', name: 'Rainfall', desc: 'Gentle shower on leaves', emoji: '🌧️' },
+    { id: 'rain', name: 'Rainfall', desc: 'Soft shower on leaves', emoji: '🌧️' },
     { id: 'fire', name: 'Fireplace', desc: 'Crackling warmth', emoji: '🕯️🔥' },
     { id: 'ocean', name: 'Ocean Waves', desc: 'Calming surf', emoji: '🌊' },
-    { id: 'forest', name: 'Forest Birds', desc: 'Soft birdsong', emoji: '🌲🐦' },
-    { id: 'whitenoise', name: 'White Noise', desc: 'Soothing constant hum', emoji: '🤍' }
+    { id: 'forest', name: 'Forest Stream', desc: 'Birds & gentle water', emoji: '🌲💧' },
+    { id: 'thunder', name: 'Thunderstorm', desc: 'Distant rumbles', emoji: '⛈️' },
+    { id: 'campfire', name: 'Campfire', desc: 'Wood crackling', emoji: '🏕️🔥' },
+    { id: 'waterfall', name: 'Waterfall', desc: 'Steady white noise', emoji: '💧🏔️' }
 ];
 
 const grid = document.getElementById('soundsGrid');
@@ -243,21 +172,24 @@ soundList.forEach(s => {
         playSound(s.id);
     });
 
+    // Individual volume slider (overrides master temporarily? better: relative to master)
     volSlider.addEventListener('input', (e) => {
         const vol = parseFloat(e.target.value);
-        if (activeType === s.id) {
-            if (s.id === 'whitenoise') setWhiteNoiseVolume(vol * masterVolume);
-            else if (sounds[s.id]) sounds[s.id].volume = vol * masterVolume;
+        if (activeType === s.id && sounds[s.id]) {
+            sounds[s.id].volume = vol * masterVolume;
         }
-        // Save volume preference if needed
+        // store preference if needed
     });
     grid.appendChild(card);
 });
 
-// Resume audio context on first user click (required by browsers)
+// Unmute videos and resume audio context on first user interaction
 window.addEventListener('click', () => {
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     for (let vid of Object.values(videos)) {
-        if (vid && vid.classList.contains('active') && vid.paused) vid.play().catch(e=>{});
+        if (vid && vid.classList.contains('active') && vid.paused) {
+            vid.play().catch(e=>{});
+        }
     }
 });
+
+console.log("Sleep Sanctum ready – blurred videos & soothing sounds");
