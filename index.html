@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Serene Sleep | Ambient Sounds with Black Screen Mode</title>
+    <title>Sleep Sanctum | Blurred Video Backgrounds for Deep Rest</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
 </head>
@@ -11,6 +11,7 @@
 <div class="stars"></div>
 
 <div class="video-backdrop" id="videoBackdrop">
+    <!-- 7 soothing videos (all loop automatically) -->
     <video id="rainVideo" loop muted playsinline>
         <source src="https://cdn.pixabay.com/video/2022/07/04/124720-725621919_large.mp4" type="video/mp4">
     </video>
@@ -23,15 +24,21 @@
     <video id="forestVideo" loop muted playsinline>
         <source src="https://cdn.pixabay.com/video/2021/12/05/102994-650049756_large.mp4" type="video/mp4">
     </video>
-    <video id="whiteVideo" loop muted playsinline>
-        <source src="https://cdn.pixabay.com/video/2023/05/20/164078-825752280_large.mp4" type="video/mp4">
+    <video id="thunderVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2020/09/22/50645-461289941_large.mp4" type="video/mp4">
+    </video>
+    <video id="campfireVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2021/12/05/102993-650049290_large.mp4" type="video/mp4">
+    </video>
+    <video id="waterfallVideo" loop muted playsinline>
+        <source src="https://cdn.pixabay.com/video/2021/07/13/81715-556826360_large.mp4" type="video/mp4">
     </video>
 </div>
 
 <div class="container">
     <header>
-        <h1>🌙 Serene Sleep</h1>
-        <p>rain · candle · ocean · forest · white noise</p>
+        <h1>🌙 Sleep Sanctum</h1>
+        <p>blurred video ambience · rain · fire · ocean · forest · thunder · campfire · waterfall</p>
     </header>
 
     <div class="sounds-grid" id="soundsGrid"></div>
@@ -47,12 +54,12 @@
         </div>
         <div class="global-volume">
             <label>🔊 Master volume</label>
-            <input type="range" id="masterVolume" min="0" max="1" step="0.01" value="0.6">
+            <input type="range" id="masterVolume" min="0" max="1" step="0.01" value="0.55">
         </div>
-        <button id="stopAllBtn" class="stop-all">■ Stop all sounds</button>
-        <button id="blackoutBtn" class="blackout-btn">🌙 Black screen mode</button>
+        <button id="stopAllBtn" class="stop-all">■ Stop all</button>
+        <button id="blackoutBtn" class="blackout-btn">🌙 Black screen</button>
     </div>
-    <footer>Let the sounds guide you to peaceful rest. ♡</footer>
+    <footer>Blurred backgrounds · total darkness mode · drift away</footer>
 </div>
 
 <script src="script.js"></script>
