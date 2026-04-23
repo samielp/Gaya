@@ -3,63 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Sleep Sanctum | Blurred Video Backgrounds for Deep Rest</title>
+    <meta name="theme-color" content="#0a0e1a">
+    <title>Sleep Sanctum | 12 Professional Sleep Sounds</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="stars"></div>
 
 <div class="video-backdrop" id="videoBackdrop">
-    <!-- 7 soothing videos (all loop automatically) -->
-    <video id="rainVideo" loop muted playsinline>
+    <!-- 12 videos – one for each sound -->
+    <video id="rainVideo" loop muted playsinline preload="metadata">
         <source src="https://cdn.pixabay.com/video/2022/07/04/124720-725621919_large.mp4" type="video/mp4">
     </video>
-    <video id="fireVideo" loop muted playsinline>
+    <video id="fireVideo" loop muted playsinline preload="metadata">
         <source src="https://cdn.pixabay.com/video/2016/06/03/4017-172856720_large.mp4" type="video/mp4">
     </video>
-    <video id="oceanVideo" loop muted playsinline>
+    <video id="oceanVideo" loop muted playsinline preload="metadata">
         <source src="https://cdn.pixabay.com/video/2022/02/20/107020-680009904_large.mp4" type="video/mp4">
     </video>
-    <video id="forestVideo" loop muted playsinline>
+    <video id="forestVideo" loop muted playsinline preload="metadata">
         <source src="https://cdn.pixabay.com/video/2021/12/05/102994-650049756_large.mp4" type="video/mp4">
     </video>
-    <video id="thunderVideo" loop muted playsinline>
+    <video id="thunderVideo" loop muted playsinline preload="metadata">
         <source src="https://cdn.pixabay.com/video/2020/09/22/50645-461289941_large.mp4" type="video/mp4">
     </video>
-    <video id="campfireVideo" loop muted playsinline>
+    <video id="campfireVideo" loop muted playsinline preload="metadata">
         <source src="https://cdn.pixabay.com/video/2021/12/05/102993-650049290_large.mp4" type="video/mp4">
     </video>
-    <video id="waterfallVideo" loop muted playsinline>
+    <video id="waterfallVideo" loop muted playsinline preload="metadata">
         <source src="https://cdn.pixabay.com/video/2021/07/13/81715-556826360_large.mp4" type="video/mp4">
+    </video>
+    <video id="pianoVideo" loop muted playsinline preload="metadata">
+        <source src="https://cdn.pixabay.com/video/2022/12/12/143330-785662050_large.mp4" type="video/mp4">
+    </video>
+    <video id="fanVideo" loop muted playsinline preload="metadata">
+        <source src="https://cdn.pixabay.com/video/2020/03/17/33725-400874556_large.mp4" type="video/mp4">
+    </video>
+    <video id="trainVideo" loop muted playsinline preload="metadata">
+        <source src="https://cdn.pixabay.com/video/2019/12/18/27234-385628877_large.mp4" type="video/mp4">
+    </video>
+    <video id="meditationVideo" loop muted playsinline preload="metadata">
+        <source src="https://cdn.pixabay.com/video/2021/11/14/96294-647418500_large.mp4" type="video/mp4">
+    </video>
+    <video id="riverVideo" loop muted playsinline preload="metadata">
+        <source src="https://cdn.pixabay.com/video/2022/06/05/119763-711382198_large.mp4" type="video/mp4">
     </video>
 </div>
 
 <div class="container">
     <header>
         <h1>🌙 Sleep Sanctum</h1>
-        <p>blurred video ambience · rain · fire · ocean · forest · thunder · campfire · waterfall</p>
+        <p>12 ambient sounds · matching blurred videos · total darkness mode</p>
     </header>
 
-    <div class="sounds-grid" id="soundsGrid"></div>
-
-    <div class="footer-controls">
-        <div class="timer-section">
-            <label>⏱️ Sleep timer (min)</label>
-            <div style="display: flex; gap: 0.5rem;">
-                <input type="number" id="timerMinutes" min="0" max="180" value="0" step="5" style="width: 80px;">
-                <button id="setTimerBtn">Set</button>
-            </div>
-            <div id="timerDisplay" class="timer-display"></div>
-        </div>
+    <div class="controls-toolbar">
         <div class="global-volume">
-            <label>🔊 Master volume</label>
-            <input type="range" id="masterVolume" min="0" max="1" step="0.01" value="0.55">
+            <span>🔊 Master</span>
+            <input type="range" id="masterVolume" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="timer-section">
+            <span>⏱️ Timer (min)</span>
+            <input type="number" id="timerMinutes" min="0" max="180" value="0" step="5">
+            <button id="setTimerBtn">Set</button>
+            <span id="timerDisplay" class="timer-display"></span>
         </div>
         <button id="stopAllBtn" class="stop-all">■ Stop all</button>
         <button id="blackoutBtn" class="blackout-btn">🌙 Black screen</button>
     </div>
-    <footer>Blurred backgrounds · total darkness mode · drift away</footer>
+
+    <div class="sounds-grid" id="soundsGrid"></div>
+
+    <div class="info-bar">
+        <p>💡 Keyboard: <kbd>1</kbd>‑<kbd>9</kbd>, <kbd>0</kbd>, <kbd>A</kbd>, <kbd>S</kbd> → play sounds · <kbd>Space</kbd> → stop all</p>
+        <p>✨ Your last played sound & volume are saved automatically</p>
+    </div>
+    <footer>© Sleep Sanctum — deep rest, redefined</footer>
 </div>
 
 <script src="script.js"></script>
